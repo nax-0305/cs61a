@@ -85,6 +85,32 @@ def mario_number(level):
     180
     """
     "*** YOUR CODE HERE ***"
+    # i, is_reach= 0, True
+    # length, ways = len(level), 0
+    # while i <= length - 3:
+    #     if not is_reach:
+    #         return 0
+    #     if level[i:i+3] == '   ':
+    #         ways = ways + 2
+    #         i = i + 3
+    #     elif level[i:i+3] == ' PP':
+    #         is_reach = False
+    #     elif level[i:i+3] == ' P ':
+    #         ways = ways + 1
+    #         i = i + 2
+    #     elif level[i:i+3] == '  P':
+    #         ways = ways + 1
+    #         i = i + 1
+    # return ways
+
+    # 第一：是否是通路，如果不是通路就不可能
+    # i, length = 0, len(level)
+    # while i < length - 1:
+    #     if level[i, i+2] == 'PP':
+    #         return 0
+    #     i = i + 1
+    # # 在通路的情况下
+    # def count_ways(level, i):
     
 
 

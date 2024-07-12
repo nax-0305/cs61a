@@ -111,7 +111,16 @@ def mario_number(level):
     #     i = i + 1
     # # 在通路的情况下
     # def count_ways(level, i):
-    
+
+    if len(level) == 0:
+        return 0
+    if level == ' ':
+        return 1
+    elif level[-1] == 'P':
+        return 0
+    else:
+        return mario_number(level[:len(level)-1]) + mario_number(level[:len(level)-2])
+
 
 
 def max_subseq(n, t):

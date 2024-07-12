@@ -204,4 +204,15 @@ def is_prime(n):
     False
     """
     "*** YOUR CODE HERE ***"
+    if n == 1:
+        return False
+    def bigger_one_isprime(n, i):
+        if i == 1:
+            return True
+        if n % i == 0:
+            return False
+        return bigger_one_isprime(n, i-1)
+        
+
+    return bigger_one_isprime(n, n-1)
 

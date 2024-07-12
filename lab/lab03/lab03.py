@@ -155,15 +155,6 @@ def max_subseq(n, t):
     5
     """
     "*** YOUR CODE HERE ***"
-    # if t == 0:
-    #     return 0
-    # elif n < pow(10, t):
-    #     return n
-    # else:
-    #     return max_subseq(n // 10)
-    
-    # base case 是在 n = n // pow(10, t), t = 1
-    # recursive case 是在 n // n // pow(10, 5) // pow(10, t-1)
 
     # 完全偏离了正常的递归
     # 1. 剥离n不参与的后t-1位
@@ -171,27 +162,36 @@ def max_subseq(n, t):
     # 3. 将d的前几位去除，赋值给n，并将t减去1
     # 4. 重复1、2、3
     # 这个if-statement，虽然说解决了，但是不是学到的递归
-    def get_maxnumber(x):
-        mn, i, c = 0, 0, x
-        while c > 0:
-            t = c % 10
-            if mn < t:
-                mn = t
-            c = c // 10
-        while x > 0:
-            if x % 10 == mn:
-                break
-            i, x  = i + 1, x // 10
-        return mn, i
-    mss = 0
-    while t > 0:
-        tuple_maxnumber = get_maxnumber(n // pow(10, t-1))
-        mss = mss + tuple_maxnumber[0] * pow(10, t-1)
-        n = n % pow(10, tuple_maxnumber[1] + t - 1)
-        t = t-1
-    return mss
+    # def get_maxnumber(x):
+    #     mn, i, c = 0, 0, x
+    #     while c > 0:
+    #         t = c % 10
+    #         if mn < t:
+    #             mn = t
+    #         c = c // 10
+    #     while x > 0:
+    #         if x % 10 == mn:
+    #             break
+    #         i, x  = i + 1, x // 10
+    #     return mn, i
+    # mss = 0
+    # while t > 0:
+    #     tuple_maxnumber = get_maxnumber(n // pow(10, t-1))
+    #     mss = mss + tuple_maxnumber[0] * pow(10, t-1)
+    #     n = n % pow(10, tuple_maxnumber[1] + t - 1)
+    #     t = t-1
+    # return mss
 
     # 使用递归方法解决一下看看
+    # 找到base case，当t为0
+
+    # 这个递归是真的不会写！
+    if t == 0:
+        return 0
+    elif n < 10:
+        return n
+    else:
+        return max(max_subseq(n // 10, t-1) * 10 + n % 10, max_subseq(n // 10, t))
 
 
 def is_prime(n):

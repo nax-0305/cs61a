@@ -16,8 +16,19 @@ def flatten(s):
     ['m', 'i', 'n', 'm', 'e', 'w', 't', 'a', 't', 'i', 'o', 'n', 's']
     """
     "*** YOUR CODE HERE ***"
-    # 我觉得应该使用递归，如果
-    
+    # 我觉得应该使用递归
+
+    # base case: 如果不是list的情况直接返回
+    # recursive case: 如果是list的情况，继续调用flatten
+    ret, i = [], 0
+    while i < len(s):
+        if type(s[i]) == list:
+            temp = [i for i in s[i]]
+            ret = ret + flatten(temp)
+        else:
+            ret.append(s[i])
+        i = i + 1
+    return ret
 
 
 def merge(s, t):
@@ -45,6 +56,35 @@ def merge(s, t):
     """
     "*** YOUR CODE HERE ***"
 
+    # haha :>, 直接调用api接口解决这个问题
+    # a = s + t
+    # a.sort()
+    # return a
+
+    # 使用递归来看看
+    # base case: s或者t为空list，结束，
+    # recursive case: 继续比较剩下的
+    # 使用递归来看看
+    # base case: s或者t为空list，结束，
+    # recursive case: 继续比较剩下的
+    if s == [] or t == []:
+          return s + t
+    a = []
+    def f(s, t, slen, tlen, a):
+        if slen == 0:
+            return t
+        elif tlen == 0:
+            return s
+        elif s[0] < t[0] and slen > 0:
+            a.append(s[0])
+            slen = len(s) - 1
+            return f(s[-slen:], t, slen, tlen, a)
+        elif t[0] <= s[0] and tlen > 0:
+            a.append(t[0])
+            tlen = len(t) - 1
+            return f(s, t[-tlen:], slen, tlen, a)
+    return a + f(s, t, len(s), len(t), a)
+
 
 def size_of_tree(t):
     """Return the number of entries in the tree.
@@ -61,6 +101,7 @@ def size_of_tree(t):
     7
     """
     "*** YOUR CODE HERE ***"
+    
 
 
 def replace_loki_at_leaf(t, lokis_replacement):

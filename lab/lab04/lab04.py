@@ -102,6 +102,14 @@ def size_of_tree(t):
     """
     "*** YOUR CODE HERE ***"
     
+    def count_treesize(t, size):
+        if is_leaf(t):
+            return 1
+        size = size + 1
+        for branch in branches(t):
+            size = size + count_treesize(branch, 0)
+        return size
+    return count_treesize(t, 0)
 
 
 def replace_loki_at_leaf(t, lokis_replacement):

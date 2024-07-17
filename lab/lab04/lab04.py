@@ -101,7 +101,9 @@ def size_of_tree(t):
     7
     """
     "*** YOUR CODE HERE ***"
-    
+
+    # base case是如果t是叶子，直接返回1
+    # recursive case是计算分支的size
     def count_treesize(t, size):
         if is_leaf(t):
             return 1
@@ -110,6 +112,12 @@ def size_of_tree(t):
             size = size + count_treesize(branch, 0)
         return size
     return count_treesize(t, 0)
+
+    # others' code
+    # if is_leaf(t):
+    #     return 1
+    # else:
+    #     return sum([size_of_tree(i) for i in branches(t)])+1 
 
 
 def replace_loki_at_leaf(t, lokis_replacement):
@@ -142,7 +150,9 @@ def replace_loki_at_leaf(t, lokis_replacement):
     True
     """
     "*** YOUR CODE HERE ***"
-
+    if is_leaf(t) and label(t) == "loki":
+        return tree(lokis_replacement)
+    return tree(t[0], [replace_loki_at_leaf(branch, lokis_replacement) for branch in branches(t)] )
 
 def divide(quotients, divisors):
     """Return a dictonary in which each quotient q is a key for the list of

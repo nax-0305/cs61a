@@ -229,4 +229,20 @@ def count_coins(total):
     True
     """
     "*** YOUR CODE HERE ***"
-    # 没写好
+    # TODO
+    # 没写出来，抄的别人的solution
+    # count_coins分为：有coin和没有coin
+    # count_partion分为：上限是m的ways和上线不是m的ways，然后求这个两个部分的和
+    # max_subseq分为：使用了那个数字和没有使用那个数字，然后比较大小
+    def count_helper(total, smallest_coin):
+        if total == 0:
+            return 1
+        if total < 0:
+            return 0
+        if smallest_coin == None:
+            return 0
+        without_coin = count_helper(total, next_larger_coin(smallest_coin))
+        with_coin = count_helper(total - smallest_coin, smallest_coin)
+        return without_coin + with_coin
+    return count_helper(total, 1)
+    

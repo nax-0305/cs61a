@@ -9,7 +9,6 @@ def midsem_survey(p):
     import hashlib
     return hashlib.sha224(p.encode('utf-8')).hexdigest()
 
-
 class Account:
     """An account has a balance and a holder.
     >>> a = Account('John')
@@ -51,7 +50,13 @@ class Account:
         """Return the number of years until balance would grow to amount."""
         assert self.balance > 0 and amount > 0 and self.interest > 0
         "*** YOUR CODE HERE ***"
-
+        # if self.banlance  + self.banlance * interest * time = amount
+        year, year_money = 1, self.balance
+        while year > 0:
+            nextyear_money = year_money + year_money * self.interest
+            if  nextyear_money> amount:
+                return year
+            year_money, year = nextyear_money, year + 1
 
 class FreeChecking(Account):
     """A bank account that charges for withdrawals, but the first two are free!
@@ -80,7 +85,12 @@ class FreeChecking(Account):
     free_withdrawals = 2
 
     "*** YOUR CODE HERE ***"
-
+    def withdraw(self, amount):
+        if self.free_withdrawals > 0:
+            self.free_withdrawals = self.free_withdrawals - 1
+            return super().withdraw(amount)
+        else:
+            return super().withdraw(amount + self.withdraw_fee)
 
 class Transaction:
     def __init__(self, id, before, after):
@@ -91,6 +101,7 @@ class Transaction:
     def changed(self):
         """Return whether the transaction resulted in a changed balance."""
         "*** YOUR CODE HERE ***"
+        return True if self.before != self.after else False
 
     def report(self):
         """Return a string describing the transaction.
@@ -105,6 +116,10 @@ class Transaction:
         msg = 'no change'
         if self.changed():
             "*** YOUR CODE HERE ***"
+            if self.after > self.before:
+                msg = 'increased ' + str(self.before) + '->' + str(self.after)
+            else:
+                msg = 'decreased ' + str(self.before) + '->' + str(self.after)
         return str(self.id) + ': ' + msg
 
 class BankAccount:
@@ -151,25 +166,31 @@ class BankAccount:
     def __init__(self, account_holder):
         self.balance = 0
         self.holder = account_holder
+        self.id = 0
+        self.transactions = []
 
     def deposit(self, amount):
         """Increase the account balance by amount, add the deposit
         to the transaction history, and return the new balance.
         """
-        self.balance = self.balance + amount
+        now_banlance =self.balance + amount
+        temp = Transaction(self.id, self.balance, now_banlance)
+        self.id, self.balance = self.id + 1, now_banlance
+        self.transactions.append(temp)
         return self.balance
 
     def withdraw(self, amount):
         """Decrease the account balance by amount, add the withdraw
         to the transaction history, and return the new balance.
         """
-        if amount > self.balance:
+        now_banlance = self.balance - amount
+        if now_banlance < 0:
+            self.transactions.append(Transaction(self.id, self.balance, self.balance))
+            self.id = self.id + 1
             return 'Insufficient funds'
-        self.balance = self.balance - amount
+        self.transactions.append(Transaction(self.id, self.balance, now_banlance))
+        self.id, self.balance = self.id + 1, now_banlance
         return self.balance
-
-
-
 
 class Email:
     """An email has the following instance attributes:
@@ -194,14 +215,17 @@ class Server:
         """Append the email to the inbox of the client it is addressed to.
             email is an instance of the Email class.
         """
-        ____.inbox.append(email)
+        # 服务器发送email，也就是再客户端的邮箱容器中添加email
+        self.clients[email.recipient_name].inbox.append(email)
 
     def register_client(self, client):
         """Add a client to the clients mapping (which is a 
         dictionary from client names to client instances).
             client is an instance of the Client class.
         """
-        ____[____] = ____
+        # 服务端注册客户，{"client.name":client}，
+        # 这个时候就可以使用email的name找到客户对象（邮箱容器、服务器、姓名）
+        self.clients[client.name] = client
 
 class Client:
     """A client has a server, a name (str), and an inbox (list).
@@ -224,13 +248,12 @@ class Client:
         self.inbox = []
         self.server = server
         self.name = name
-        server.register_client(____)
+        server.register_client(self)
 
     def compose(self, message, recipient_name):
         """Send an email with the given message to the recipient."""
-        email = Email(message, ____, ____)
+        email = Email(message, self, recipient_name)
         self.server.send(email)
-
 
 def make_change(amount, coins):
     """Return a list of coins that sum to amount, preferring the smallest coins

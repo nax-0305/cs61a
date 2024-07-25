@@ -12,7 +12,21 @@ def cumulative_mul(t):
     Tree(5040, [Tree(60, [Tree(3), Tree(4), Tree(5)]), Tree(42, [Tree(7)])])
     """
     "*** YOUR CODE HERE ***"
+    # 这样的递归的方法已经实现了，但是就是返回值不对
+    # if t.is_leaf():
+    #     return t.label
+    # for branch in t.branches:
+    #     t.label = t.label * cumulative_mul(branch)
+    # return t.label
 
+    # 哈哈， 利用higher order function就解决了返回值的问题，芜湖
+    def f(t):
+        if t.is_leaf():
+            return t.label
+        for branch in t.branches:
+            t.label = t.label * f(branch)
+        return t.label
+    f(t)
 
 def delete(t, x):
     """Remove all nodes labeled x below the root within Tree t. When a non-leaf
@@ -33,14 +47,14 @@ def delete(t, x):
     >>> t
     Tree(1, [Tree(4), Tree(5), Tree(3, [Tree(6)]), Tree(6), Tree(7), Tree(8), Tree(4)])
     """
-    new_branches = []
-    for _________ in ________________:
-        _______________________
-        if b.label == x:
-            __________________________________
-        else:
-            __________________________________
-    t.branches = ___________________
+    # new_branches = []
+    # for b in t.branches:
+    #     delete(b, x)
+    #     if b.label == x:
+    #         new_branches.append([])
+    #     else:
+    #         new_branches.append(b)
+    # t.branches = new_branches
 
 
 def convert_link(link):

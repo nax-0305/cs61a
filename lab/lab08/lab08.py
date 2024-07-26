@@ -56,6 +56,20 @@ def delete(t, x):
     #         new_branches.append(b)
     # t.branches = new_branches
 
+    # 终于写出来，这个
+    new_branches = []
+    for b in t.branches:
+        # 要从上往下把label为x的删除，所以要从这个递归
+        # 然后对当前的label判断，然后做动作
+        delete(b, x)
+        # 如果b.label == x，那么就把当前的 new_branch + b的branch
+        # 如果b.label != x, 那么就把b添加到new_branches
+        if b.label == x:
+            new_branches = new_branches + b.branches
+        else:
+            new_branches.append(b)
+    # 在本轮branch遍历结束后替换为new_branches，t.branches = new_branches
+    t.branches = new_branches
 
 def convert_link(link):
     """Takes a linked list and returns a Python list with the same elements.
@@ -67,7 +81,11 @@ def convert_link(link):
     []
     """
     "*** YOUR CODE HERE ***"
-
+    ret = []
+    while link != Link.empty:
+        ret.append(link.first)
+        link = link.rest
+    return ret
 
 def add_links(link1, link2):
     """Adds two Links, returning a new Link
@@ -82,7 +100,23 @@ def add_links(link1, link2):
     <3 4 5 1 2>
     """
     "*** YOUR CODE HERE ***"
-
+    # ret_link = Link.empty
+    # while link1 != Link.empty:
+    #     ret_link = Link(link1.first, ret_link)
+    #     link1 = link1.rest
+    # while link2 != Link.empty:
+    #     ret_link = Link(link2.first, ret_link)
+    #     link2 = link2.rest
+    # return ret_link
+    
+    # 上面得程序结果是倒序得，看看利用递归，正序
+    if link1.rest == Link.empty:
+        return Link(link1.first)
+    if link2.rest == Link.empty:
+        return Link(link2.first)
+    return Link(add_links(link1.rest, link2))
+    add_links(link1, link2.rest)
+    
 
 def multiply_lnks(lst_of_lnks):
     """

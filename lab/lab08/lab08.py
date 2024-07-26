@@ -110,12 +110,16 @@ def add_links(link1, link2):
     # return ret_link
     
     # 上面得程序结果是倒序得，看看利用递归，正序
-    if link1.rest == Link.empty:
-        return Link(link1.first)
-    if link2.rest == Link.empty:
-        return Link(link2.first)
-    return Link(add_links(link1.rest, link2))
-    add_links(link1, link2.rest)
+    # 两个link好像不是很好使用递归，不是一个link的tree recursion
+    # 利用栈呗，使用convert函数
+    ret_link = Link.empty
+    list1 = convert_link(link1)
+    list2 = convert_link(link2)
+    while len(list2) > 0:
+        ret_link = Link(list2.pop(), ret_link)
+    while len(list1) > 0:
+        ret_link = Link(list1.pop(), ret_link)
+    return ret_link
     
 
 def multiply_lnks(lst_of_lnks):
@@ -134,12 +138,12 @@ def multiply_lnks(lst_of_lnks):
     Link(48, Link(12, Link(0)))
     """
     product = 1
-    for _________ in ________________:
-        if __________________________________________:
-            _________________________________
-        ___________________
-    lst_of_lnks_rests = [_________ for _________ in ________________]
-    return _________________________________________________
+    for link in lst_of_lnks:
+        if link == Link.empty:
+            return Link.empty
+        product = product * link.first
+    lst_of_lnks_rests = [link.rest for link in lst_of_lnks]
+    return Link(product, multiply_lnks(lst_of_lnks_rests))
 
 
 class Tree:

@@ -1,6 +1,26 @@
-(define (over-or-under num1 num2) 'YOUR-CODE-HERE)
+(define (over-or-under num1 num2) 
+  (if (< num1 num2) 
+      -1
+      (if (= num1 num2) 
+          0
+          (if (> num1 num2)
+              1)
+    )
+  )
+)
 
-(define (make-adder num) 'YOUR-CODE-HERE)
+; 使用cond来做更简洁一点
+; (define (over-or-under num1 num2) 
+;   (cond ((< num1 num2) -1)
+;         ((= num1 num2) 0)
+;         ((> num1 num2) 1)
+;   )
+; )
+
+(define (make-adder num) 
+  (define adder (lambda (x) (+ num x)))
+  (adder x)
+)
 
 (define (composed f g) 'YOUR-CODE-HERE)
 

@@ -18,13 +18,21 @@
 ; )
 
 (define (make-adder num) 
-  (define adder (lambda (x) (+ num x)))
-  (adder x)
+  (lambda (inc) (+ num inc))
 )
 
-(define (composed f g) 'YOUR-CODE-HERE)
+(define (composed f g)
+  (lambda (x) (f (g x)))
+)
 
-(define (repeat f n) 'YOUR-CODE-HERE)
+(define (repeat f n) 
+  (lambda (x) 
+    (if (= n 0)
+        1
+        (* (f x) (repeat f (- n 1)))
+    )
+  )
+)
 
 (define (max a b)
   (if (> a b)
@@ -36,7 +44,12 @@
       b
       a))
 
-(define (gcd a b) 'YOUR-CODE-HERE)
+(define (gcd a b) 
+  (if (= b 0)
+      a
+      (gcd b (modulo a b))
+  )
+)
 
 (define (duplicate lst) 'YOUR-CODE-HERE)
 

@@ -9,7 +9,7 @@
   )
 )
 
-; 使用cond来做更简洁一点
+; this is another way to solve this problem
 ; (define (over-or-under num1 num2) 
 ;   (cond ((< num1 num2) -1)
 ;         ((= num1 num2) 0)
@@ -27,9 +27,11 @@
 
 (define (repeat f n) 
   (lambda (x) 
-    (if (= n 0)
-        1
-        (* (f x) (repeat f (- n 1)))
+    (if (= n 1)
+        f(x)
+        ; because the hint provided by cs61a
+        ; also, the return of repeat is function, so it can be passed in composed function
+        (composed f (repeat f (- n 1)))
     )
   )
 )
@@ -51,10 +53,23 @@
   )
 )
 
-(define (duplicate lst) 'YOUR-CODE-HERE)
+; using cons recusively, not for or while
+(define (duplicate lst) 
+  (if (null? lst)
+      nil 
+      (cons (car lst) (cons (car lst) (duplicate (cdr lst))))
+  )
+)
 
 (expect (duplicate '(1 2 3)) (1 1 2 2 3 3))
 
 (expect (duplicate '(1 1)) (1 1 1 1))
 
-(define (deep-map fn s) 'YOUR-CODE-HERE)
+(define (deep-map fn s) 
+  (if (null? s)
+      nil
+      if (list? (car s))
+          cons((map fn (car s)) (deep-map fn cdr(s)))
+          cons((fn (car s)) (deep-map fn cdr(s)))
+  )
+)

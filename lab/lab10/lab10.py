@@ -87,6 +87,18 @@ def eval_and(expressions):
     True
     """
     "*** YOUR CODE HERE ***"
+    if expressions is nil:
+        return True
+    condition = expressions.first
+    if condition is False:
+        return False
+    if isinstance(condition, Pair):
+        condition = calc_eval(expressions.first)
+    if expressions.rest == nil:
+        return condition
+    if condition == 0:
+        condition = expressions.rest.first
+    return condition and eval_and(expressions.rest)
 
 bindings = {}
 

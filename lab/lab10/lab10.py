@@ -66,6 +66,17 @@ def floor_div(args):
         return f(args.rest, dividend)
     return f(args.rest, args.first)
 
+    # 看了别人得solution， 才想起来可以使用while，迭代Pair
+    # dividend = args.first
+    # next = args.rest
+    # while next != nil:
+    #     divisor = next.first
+    #     if isinstance(divisor, Pair):
+    #         divisor = calc_eval(divisor)
+    #     dividend = dividend // divisor
+    #     next = next.rest
+    # return dividend
+
 scheme_t = True   # Scheme's #t
 scheme_f = False  # Scheme's #f
 
@@ -100,6 +111,14 @@ def eval_and(expressions):
         condition = expressions.rest.first
     return condition and eval_and(expressions.rest)
 
+    # curr, val = expressions, True
+    # while curr is not nil:
+    #     val = calc_eval(curr.first)
+    #     if val is scheme_f:
+    #         return scheme_f
+    #     curr = curr.rest
+    #     return val
+
 bindings = {}
 
 def eval_define(expressions):
@@ -118,6 +137,7 @@ def eval_define(expressions):
     2
     """
     "*** YOUR CODE HERE ***"
+    
 
 OPERATORS = { "//": floor_div, "+": addition, "-": subtraction, "*": multiplication, "/": division }
 

@@ -23,7 +23,7 @@ def calc_eval(exp):
         elif operator == 'define': # define expressions
             return eval_define(operands)
         else: # Call expressions
-            return calc_apply(OPERATORS[operator], operands) # UPDATE THIS FOR Q2, what is type(operator)?
+            return calc_apply(calc_eval(operator), operands) # UPDATE THIS FOR Q2, what is type(operator)?
     elif exp in OPERATORS:   # Looking up procedures
         return OPERATORS[exp]
     elif isinstance(exp, int) or isinstance(exp, bool):   # Numbers and booleans
@@ -137,7 +137,15 @@ def eval_define(expressions):
     2
     """
     "*** YOUR CODE HERE ***"
-    
+    # if expressions.first not in bindings:
+    #     bindings[expressions.first] = expressions.rest.first
+    #     return expressions.first
+    # else:
+    #     return calc_eval(bindings[expressions.first])
+
+    symbol, value = expressions.first, calc_eval(expressions.rest.first)
+    bindings[symbol] = value
+    return symbol
 
 OPERATORS = { "//": floor_div, "+": addition, "-": subtraction, "*": multiplication, "/": division }
 

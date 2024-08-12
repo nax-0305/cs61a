@@ -14,6 +14,11 @@ def pascal(row, column):
     6
     """
     "*** YOUR CODE HERE ***"
+    if row < column:
+        return 0
+    if row == 0 or column == 0 or row == column:
+        return 1
+    return pascal(row-1, column) + pascal(row-1, column-1)
 
 
 def insert_items(s, before, after):
@@ -42,7 +47,13 @@ def insert_items(s, before, after):
     True
     """
     "*** YOUR CODE HERE ***"
-
+    l, i = len(s), 0
+    while i <= l:
+        if s[i] == before:
+            i = i + 1
+            s.insert(i, after)
+        i = i + 1
+    return s
 
 HW_SOURCE_FILE=__file__
 
@@ -51,11 +62,13 @@ def planet(mass):
     """Construct a planet of some mass."""
     assert mass > 0
     "*** YOUR CODE HERE ***"
+    return ['planet', mass]
 
 def mass(p):
     """Select the mass of a planet."""
     assert is_planet(p), 'must call mass on a planet'
     "*** YOUR CODE HERE ***"
+    return p[1]
 
 def is_planet(p):
     """Whether p is a planet."""
@@ -108,7 +121,15 @@ def balanced(m):
     True
     """
     "*** YOUR CODE HERE ***"
-
+    # 判断是否平衡：左右的mass * length
+    assert is_mobile(m)
+    left_arm, right_arm = left(m), right(m)
+    if is_planet(end(left_arm)):
+        return total_mass(left_arm)
+    if is_planet(end(right_arm)):
+        return total_mass(right_arm)
+    else:
+        return balanced(end(left_arm)) and balanced(end(right(right_arm))) and 
 
 def berry_finder(t):
     """Returns True if t contains a node with the value 'berry' and 

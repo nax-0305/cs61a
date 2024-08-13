@@ -124,14 +124,24 @@ def balanced(m):
     # 判断是否平衡：左右的mass * length
     assert is_mobile(m)
     left_arm, right_arm = left(m), right(m)
-    if is_planet(end(left_arm)):
-        return total_mass(left_arm)
-    if is_planet(end(right_arm)):
-        return total_mass(right_arm)
+    left_arm_end, right_arm_end = end(left_arm), end(right_arm)
+    cur_is_balanced = length(left_arm) * total_mass(left_arm_end) == length(right_arm) * total_mass(right_arm_end)
+    if is_mobile(left_arm_end) and is_mobile(right_arm_end):
+        return balanced(left_arm_end) and balanced(right_arm_end) and cur_is_balanced
     else:
-        return balanced(end(left_arm)) and balanced(end(right(right_arm))) and 
-
-def berry_finder(t):
+        return cur_is_balanced
+    
+    # this is another solution，base case is planet that is True about balanced
+    # and recursive case is judge the balance between left and right , also and the balance of left, also and the balance of right
+    # if is_planet(m):
+    #     return True
+    # else:
+    #     left_end, right_end = end(left(m)), end(right(m))
+    #     torque_left = length(left(m)) * total_mass(left_end)
+    #     torque_right = length(right(m)) * total_mass(right_end)
+    #     return torque_left == torque_right and balanced(left_end) and balanced(right_end)
+    
+def berry_finder(t): 
     """Returns True if t contains a node with the value 'berry' and 
     False otherwise.
 
@@ -149,7 +159,13 @@ def berry_finder(t):
     True
     """
     "*** YOUR CODE HERE ***"
-
+    # this problem should be resolve by recursive and iterate
+    if label(t) == 'berry':
+        return True
+    is_or = False
+    for branch in branches(t):
+        is_or = is_or or berry_finder(branch)
+    return is_or
 
 HW_SOURCE_FILE=__file__
 
@@ -164,8 +180,14 @@ def max_path_sum(t):
     17
     """
     "*** YOUR CODE HERE ***"
-
-
+    max = 0
+    if is_leaf(t):
+        return label(t)
+    for branch in branches(t):
+        cur_max = label(t) + max_path_sum(branch) 
+        max = cur_max if cur_max > max else max
+        # cur_max = 0
+    return max
 def print_move(origin, destination):
     """Print instructions to move a disk."""
     print("Move the top disk from rod", origin, "to rod", destination)

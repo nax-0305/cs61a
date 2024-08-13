@@ -9,8 +9,13 @@ def hailstone(n):
     1
     """
     "*** YOUR CODE HERE ***"
-
-
+    # yield key word
+    while n > 0:
+        yield n
+        if n % 2 == 0:
+            n = n // 2
+        elif n > 1 and n % 2 == 1:
+            n = 3 * n + 1
 def merge(a, b):
     """Q2:
     >>> def sequence(start, step):
@@ -24,7 +29,20 @@ def merge(a, b):
     [2, 3, 5, 7, 8, 9, 11, 13, 14, 15]
     """
     "*** YOUR CODE HERE ***"
-
+    cur_a, cur_b = next(a), next(b)
+    while True:
+        ret = 0
+        if cur_a < cur_b:
+            ret = cur_a
+            cur_a = next(a) 
+        elif cur_a == cur_b:
+            ret = cur_a
+            cur_a = next(a)
+            cur_b = next(b)
+        else:
+            ret = cur_b
+            cur_b = next(b)
+        yield ret
 
 def perms(seq):
     """Q3: Generates all permutations of the given sequence. Each permutation is a
@@ -49,7 +67,10 @@ def perms(seq):
     [['a', 'b'], ['b', 'a']]
     """
     "*** YOUR CODE HERE ***"
-
+    if len(seq) == 1:
+        yield [seq]
+    for item in iter(seq):
+        yield
 
 def yield_paths(t, value):
     """Q4: Yields all possible paths from the root of t to a node with the label

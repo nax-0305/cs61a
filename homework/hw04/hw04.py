@@ -67,10 +67,12 @@ def perms(seq):
     [['a', 'b'], ['b', 'a']]
     """
     "*** YOUR CODE HERE ***"
-    if len(seq) == 1:
-        yield [seq]
-    for item in iter(seq):
-        yield
+    s = list(seq)
+    if len(s) == 1:
+        yield s
+    for i in s:
+        for p in perms(s.remove(i)):
+            yield [i] + p
 
 def yield_paths(t, value):
     """Q4: Yields all possible paths from the root of t to a node with the label
@@ -107,11 +109,11 @@ def yield_paths(t, value):
     [[0, 2], [0, 2, 1, 2]]
     """
     if label(t) == value:
-        yield ____
+        yield [value]
     for b in branches(t):
-        for ____ in ____:
-            yield ____
-
+        for y in yield_paths(b, value):
+            yield [label(t)] + y
+    
 
 class Minty:
     """A mint creates coins by stamping on years. The update method sets the mint's stamp to Minty.present_year.
@@ -155,7 +157,6 @@ class Coin:
 
     def worth(self):
         "*** YOUR CODE HERE ***"
-
 
 class VendingMachine:
     """A vending machine that vends some product for some price.

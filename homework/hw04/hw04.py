@@ -67,12 +67,11 @@ def perms(seq):
     [['a', 'b'], ['b', 'a']]
     """
     "*** YOUR CODE HERE ***"
-    s = list(seq)
-    if len(s) == 1:
-        yield s
-    for i in s:
-        for p in perms(s.remove(i)):
-            yield [i] + p
+    if len(seq) == 1:
+        yield list(seq)
+    for p in perms(seq[:-1]):
+        for i in range(len(seq)):
+            yield p.insert(i, seq[-1])
 
 def yield_paths(t, value):
     """Q4: Yields all possible paths from the root of t to a node with the label

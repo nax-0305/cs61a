@@ -195,6 +195,17 @@ class Coin:
             value = 10
         over = Minty.present_year - self.year - self.cents
         return value if over < 0 else value + over
+    
+    # solution from cs61a
+    # def __init__(self, year, type):
+    #     self.year = year
+    #     if type == ('Dime'):
+    #         self.cents = 10
+    #     elif type == ('Nickel'):
+    #         self.cents = 5
+
+    # def worth(self):
+    #     return self.cents + max(0, Minty.present_year - self.year - 50)
 
 class VendingMachine:
     """A vending machine that vends some product for some price.
@@ -237,11 +248,37 @@ class VendingMachine:
     def __init__(self, product, price):
         self.product = product
         self.price = price
-    
+        self.remaining = 0
+        self.cur_balance = 0
+
+    def vend(self):
+        if self.remaining == 0:
+            return f'Nothing left to vend. Please restock.'
+        else:
+            if self.cur_balance < self.price:
+                return f'Please add ${self.price - self.cur_balance} more funds.'
+            elif self.cur_balance == self.price:
+                self.remaining = self.remaining - 1
+                self.cur_balance = 0
+                return f'Here is your {self.product}.'
+            else:
+                self.remaining = self.remaining - 1
+                change = self.cur_balance - self.price
+                self.cur_balance = 0
+                return f'Here is your {self.product} and ${change} change.'
+
     def add_funds(self, cash):
-        
+        if self.remaining <= 0:
+            return f'Nothing left to vend. Please restock. Here is your ${cash}.'
+        else:
+            self.cur_balance = self.cur_balance + cash
+            return f'Current balance: ${self.cur_balance}'
 
+    def restock(self, num):
+        self.remaining = self.remaining + num
+        return f'Current {self.product} stock: {self.remaining}'
 
+    
 # Tree Data Abstraction
 
 def tree(label, branches=[]):

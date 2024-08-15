@@ -16,6 +16,7 @@ def hailstone(n):
             n = n // 2
         elif n > 1 and n % 2 == 1:
             n = 3 * n + 1
+
 def merge(a, b):
     """Q2:
     >>> def sequence(start, step):
@@ -44,6 +45,19 @@ def merge(a, b):
             cur_b = next(b)
         yield ret
 
+    # solution from cs61a
+    # first_a, first_b = next(a), next(b)
+    # while True:
+    #     if first_a == first_b:
+    #         yield first_a
+    #         first_a, first_b = next(a), next(b)
+    #     elif first_a < first_b:
+    #         yield first_a
+    #         first_a = next(a)
+    #     else:
+    #         yield first_b
+    #         first_b = next(b)
+
 def perms(seq):
     """Q3: Generates all permutations of the given sequence. Each permutation is a
     list of the elements in SEQ in a different order. The permutations may be
@@ -67,11 +81,25 @@ def perms(seq):
     [['a', 'b'], ['b', 'a']]
     """
     "*** YOUR CODE HERE ***"
-    if len(seq) == 1:
-        yield list(seq)
-    for p in perms(seq[:-1]):
-        for i in range(len(seq)):
-            yield p.insert(i, seq[-1])
+    # s, n = list(seq), len(seq)
+    # if n == 1:
+    #     yield s 
+    # for p in perms(s[:n-1]):
+    #     for i in range(len(p) + 1):
+    #         temp = p.copy()
+    #         temp.insert(i, s[-1])
+    #         i = i + 1
+    #         yield temp
+
+    # solution from cs61a
+    if not seq:
+        yield []
+    else:
+        for p in perms(seq[1:]):
+            for i in range(len(seq)):
+                yield p[:i] + [seq[0]] + p[i:]
+
+
 
 def yield_paths(t, value):
     """Q4: Yields all possible paths from the root of t to a node with the label
@@ -144,18 +172,29 @@ class Minty:
 
     def create(self, type):
         "*** YOUR CODE HERE ***"
+        return Coin(self.year, type)
 
     def update(self):
         "*** YOUR CODE HERE ***"
+        self.year = Minty.present_year
 
 class Coin:
     cents = 50
 
     def __init__(self, year, type):
         "*** YOUR CODE HERE ***"
+        self.year = year
+        self.type = type
 
     def worth(self):
         "*** YOUR CODE HERE ***"
+        value = 0
+        if self.type == 'Nickel':
+            value = 5
+        elif self.type == 'Dime':
+            value = 10
+        over = Minty.present_year - self.year - self.cents
+        return value if over < 0 else value + over
 
 class VendingMachine:
     """A vending machine that vends some product for some price.
@@ -195,7 +234,12 @@ class VendingMachine:
     'Here is your soda.'
     """
     "*** YOUR CODE HERE ***"
-
+    def __init__(self, product, price):
+        self.product = product
+        self.price = price
+    
+    def add_funds(self, cash):
+        
 
 
 # Tree Data Abstraction

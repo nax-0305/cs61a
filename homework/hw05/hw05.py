@@ -333,11 +333,12 @@ def deep_map_mut(func, lnk):
     <9 <16> 25 36>
     """
     "*** YOUR CODE HERE ***"
-    if not lnk.rest:
+    if not lnk:
         return
     if isinstance(lnk.first, Link):
         deep_map_mut(func, lnk.first)
-    lnk.first = func(lnk.first)
+    else:
+        lnk.first = func(lnk.first)
     deep_map_mut(func, lnk.rest)
 
 

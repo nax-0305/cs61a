@@ -1,25 +1,47 @@
 (define (square n) (* n n))
 
 (define (pow base exp)
-    (if (odds? exp) (* base (pow (square base) (- exp 1))) (pow base exp))
+   (if (= exp 2) 
+        (square base)
+        (if (odd? exp) (* base (pow base (- exp 1)))
+                (square (pow base (quotient exp 2)))
+        )
+   )
 )
 
 
 (define (repeatedly-cube n x)
   (if (zero? n)
       x
-      (let (_________________)
-        (* y y y))))
+      (let 
+        ; even though only one binding, it is needful to use additional kuohao
+        (
+            (y (repeatedly-cube (- n 1) x))
+        )
+        (* y y y)))
+)
 
 (define (cddr s) (cdr (cdr s)))
 
-(define (cadr s) 'YOUR-CODE-HERE)
+(define (cadr s) (car (cdr s)))
 
-(define (caddr s) 'YOUR-CODE-HERE)
+(define (caddr s) (car (cddr s)))
 
-(define (ascending? s) 'YOUR-CODE-HERE)
+(define (ascending? s) 
+    (if (or (null? s) (null? (cdr s))) #t 
+        (and (<= (car s) (cadr s)) (ascending? (cdr s)))
+    )
+)
 
-(define (my-filter pred s) 'YOUR-CODE-HERE)
+(define (my-filter pred s) 
+    (if (null? s) 
+        nil
+        (if (pred (car s))
+            (cons (car s) (my-filter pred (cdr s)))
+            (my-filter pred (cdr s))
+        )
+    )
+)
 
 (define (no-repeats s) 'YOUR-CODE-HERE)
 

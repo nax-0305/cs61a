@@ -10,7 +10,7 @@
 )
 
 
-(define (repeatedly-cube n x)
+`(define (repeatedly-cube n x)
   (if (zero? n)
       x
       (let 
@@ -43,7 +43,16 @@
     )
 )
 
-(define (no-repeats s) 'YOUR-CODE-HERE)
+(define (no-repeats s) 
+    (if (null? s) 
+        s
+        (cons 
+            (car s)
+            ; produce rest list without (car s) every recursion
+            (no-repeats (filter (lambda (x) (not (= (car s) x))) (cdr s)))
+        )
+    )
+)
 
 ; helper function
 ; returns the values of lst that are bigger than x

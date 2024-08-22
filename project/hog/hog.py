@@ -9,7 +9,7 @@ GOAL = 100  # The goal of Hog is to score 100 points.
 # Phase 1: Simulator #
 ######################
 
-
+# 当掷骰子的次数大于0时，玩家得到的分数
 def roll_dice(num_rolls, dice=six_sided):
     """Simulate rolling the DICE exactly NUM_ROLLS > 0 times. Return the sum of
     the outcomes unless any of the outcomes is 1. In that case, return 1.
@@ -22,9 +22,16 @@ def roll_dice(num_rolls, dice=six_sided):
     assert num_rolls > 0, 'Must roll at least once.'
     # BEGIN PROBLEM 1
     "*** YOUR CODE HERE ***"
+    i, sum, exist_one = 0, 0, False
+    while i < num_rolls:
+        outcome = dice()
+        if outcome == 1:
+            exist_one = True
+        sum, i = sum + outcome, i + 1
+    return 1 if exist_one else sum
     # END PROBLEM 1
 
-
+# 当掷骰子的次数为0的时候，玩家得到的分数
 def boar_brawl(player_score, opponent_score):
     """Return the points scored by rolling 0 dice according to Boar Brawl.
 
@@ -34,9 +41,10 @@ def boar_brawl(player_score, opponent_score):
     """
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
+    return max(3 * abs(player_score % 10 - opponent_score % 100 // 10), 1)
     # END PROBLEM 2
 
-
+# 根据掷骰子的次数，返回玩家得到的分数
 def take_turn(num_rolls, player_score, opponent_score, dice=six_sided):
     """Return the points scored on a turn rolling NUM_ROLLS dice when the
     player has PLAYER_SCORE points and the opponent has OPPONENT_SCORE points.
@@ -52,9 +60,10 @@ def take_turn(num_rolls, player_score, opponent_score, dice=six_sided):
     assert num_rolls <= 10, 'Cannot roll more than 10 dice.'
     # BEGIN PROBLEM 3
     "*** YOUR CODE HERE ***"
+    return roll_dice(num_rolls, dice) if num_rolls != 0 else boar_brawl(player_score, opponent_score) 
     # END PROBLEM 3
 
-
+# 简单的更新分数，也就是只根据掷骰子的次数
 def simple_update(num_rolls, player_score, opponent_score, dice=six_sided):
     """Return the total score of a player who starts their turn with
     PLAYER_SCORE and then rolls NUM_ROLLS DICE, ignoring Sus Fuss.
@@ -62,6 +71,7 @@ def simple_update(num_rolls, player_score, opponent_score, dice=six_sided):
     score = player_score + take_turn(num_rolls, player_score, opponent_score, dice)
     return score
 
+# 判断n是否是素数
 def is_prime(n):
     """Return whether N is prime."""
     if n == 1:
@@ -73,24 +83,42 @@ def is_prime(n):
         k += 1
     return True
 
+# 返回n的因子数量
 def num_factors(n):
     """Return the number of factors of N, including 1 and N itself."""
     # BEGIN PROBLEM 4
     "*** YOUR CODE HERE ***"
+    i, num = 1, 0
+    while i <= n:
+        if n % i == 0:
+            num = num + 1
+        i = i + 1
+    return num
     # END PROBLEM 4
 
+# 增加sus规则，玩家掷骰子回合结束后，判断分数是否含有3或4个因子，决定是否改变得分
 def sus_points(score):
     """Return the new score of a player taking into account the Sus Fuss rule."""
     # BEGIN PROBLEM 4
     "*** YOUR CODE HERE ***"
+    def next_prime(score):
+        while True:
+            if is_prime(score):
+                return score
+            score = score + 1
+    n = num_factors(score)
+
+    return next_prime(score) if n == 3 or n == 4 else score
     # END PROBLEM 4
 
+# sus规则更新玩家得分
 def sus_update(num_rolls, player_score, opponent_score, dice=six_sided):
     """Return the total score of a player who starts their turn with
     PLAYER_SCORE and then rolls NUM_ROLLS DICE, *including* Sus Fuss.
     """
     # BEGIN PROBLEM 4
     "*** YOUR CODE HERE ***"
+    return sus_points(simple_update(num_rolls, player_score, opponent_score, dice))
     # END PROBLEM 4
 
 
@@ -130,6 +158,16 @@ def play(strategy0, strategy1, update,
     who = 0  # Who is about to take a turn, 0 (first) or 1 (second)
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+    while True:
+        if who == 0:
+            score0 = update(strategy0(score0, score1), score0, score1, dice)
+            if score0 >= goal:
+                break
+        else:
+            score1 = update(strategy1(score1, score0), score1, score0, dice)
+            if score1 >= goal:
+                break
+        who = 1 - who
     # END PROBLEM 5
     return score0, score1
 

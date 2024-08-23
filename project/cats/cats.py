@@ -3,6 +3,7 @@
 from utils import (
     lower,
     split,
+    # 去除标点符号
     remove_punctuation,
     lines_from_file,
     count,
@@ -37,6 +38,27 @@ def pick(paragraphs, select, k):
     """
     # BEGIN PROBLEM 1
     "*** YOUR CODE HERE ***"
+    # i, kth = 0, 0
+    # while i < len(paragraphs):
+    #     cur = paragraphs[i]
+    #     if select(cur):
+    #         if kth == k:
+    #             return cur
+    #         else:
+    #             kth = kth + 1
+    #     i = i + 1
+    # return ''
+
+    # yes！！ recursion version done
+    if len(paragraphs) == 0:
+        return ''
+    if select(paragraphs[0]):
+        if k == 0:
+            return paragraphs[0]
+        else:
+            return pick(paragraphs[1:], select, k-1)
+    return pick(paragraphs[1:], select, k)
+    
     # END PROBLEM 1
 
 
@@ -57,6 +79,8 @@ def about(subject):
 
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
+    def is_contains(paragraph):
+        
     # END PROBLEM 2
 
 

@@ -214,6 +214,7 @@ def catch_up(score, opponent_score):
         return 5
 
 
+# 由于strategy是根据两个玩家的分数决定的，如果所有分数的组合都是一个值，那么就是always roll the same dice
 def is_always_roll(strategy, goal=GOAL):
     """Return whether STRATEGY always chooses the same number of dice to roll
     given a game that goes to GOAL points.
@@ -227,9 +228,20 @@ def is_always_roll(strategy, goal=GOAL):
     """
     # BEGIN PROBLEM 7
     "*** YOUR CODE HERE ***"
+    i, j= 0, 1
+    pre_value, is_same = strategy(0, 0), True
+    while i < goal:
+        while j < goal:
+            cur_value = strategy(i, j)
+            if cur_value != pre_value:
+                return False
+            j, pre_value = j + 1, cur_value
+        i, j = i + 1, 0
+    return True
     # END PROBLEM 7
 
 
+#执行samples_count次的original_function，然后对其和求平均数
 def make_averaged(original_function, samples_count=1000):
     """Return a function that returns the average value of ORIGINAL_FUNCTION
     called SAMPLES_COUNT times.
@@ -243,9 +255,20 @@ def make_averaged(original_function, samples_count=1000):
     """
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    # arg的参数个数可以根据，传进来的original_function的参数决定
+    # roll_dice是两个参数，由此，averaged_dice是传进两个参数：num_rolls、dice()
+    def average(*args):
+        i, sum = 0, 0
+        while i < samples_count:
+            sum = sum + original_function(*args)
+            i = i + 1
+        return sum / samples_count
+    return average
     # END PROBLEM 8
 
 
+# 扔骰子的次数从1到10，每种情况得到的平均数可能不同，所以要找到最大的。
+# 如果最大的情况有多个，选取最小的
 def max_scoring_num_rolls(dice=six_sided, samples_count=1000):
     """Return the number of dice (1 to 10) that gives the maximum average score for a turn.
     Assume that the dice always return positive outcomes.
@@ -256,6 +279,13 @@ def max_scoring_num_rolls(dice=six_sided, samples_count=1000):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    i, t_mr = 1, [0, 0]
+    while i <= 10:
+        cur_score = make_averaged(roll_dice, samples_count)(i, dice)
+        if cur_score > t_mr[0]:
+            t_mr = [cur_score, i]
+        i = i + 1
+    return t_mr[1]
     # END PROBLEM 9
 
 
@@ -300,14 +330,16 @@ def boar_strategy(score, opponent_score, threshold=11, num_rolls=6):
     points, and returns NUM_ROLLS otherwise. Ignore score and Sus Fuss.
     """
     # BEGIN PROBLEM 10
-    return num_rolls  # Remove this line once implemented.
+    least_thre = boar_brawl(score, opponent_score)
+    return num_rolls if least_thre < threshold else 0
     # END PROBLEM 10
 
 
 def sus_strategy(score, opponent_score, threshold=11, num_rolls=6):
     """This strategy returns 0 dice when your score would increase by at least threshold."""
     # BEGIN PROBLEM 11
-    return num_rolls  # Remove this line once implemented.
+    differ = sus_update(0, score, opponent_score) - score
+    return num_rolls if differ < threshold else 0
     # END PROBLEM 11
 
 

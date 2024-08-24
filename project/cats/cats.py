@@ -18,6 +18,7 @@ from datetime import datetime
 ###########
 
 
+# 在一段话（paragraphs）中，选择第k个满足select函数的string or word
 def pick(paragraphs, select, k):
     """Return the Kth paragraph from PARAGRAPHS for which the SELECT returns True.
     If there are fewer than K such paragraphs, return an empty string.
@@ -62,6 +63,8 @@ def pick(paragraphs, select, k):
     # END PROBLEM 1
 
 
+# about接受一个string list， 返回一个函数exist_in(paragraph)。
+# exist_in接受一个paragraph，返回string_list中的strings是否有存在于paragraph
 def about(subject):
     """Return a function that takes in a paragraph and returns whether
     that paragraph contains one of the words in SUBJECT.
@@ -79,11 +82,19 @@ def about(subject):
 
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
-    def is_contains(paragraph):
-        
+    def exist_in(paragraph):
+        str_list = split(paragraph)
+        for str in str_list:
+            for item in subject:
+                if lower(remove_punctuation(str)) == item:
+                    return True
+        return False
+    return exist_in
     # END PROBLEM 2
 
 
+# 在参数typed和source两个字符串中，逐个判断每个word（根据空格划分）是否相等
+# 计算规则如下，计算typed的正确率
 def accuracy(typed, source):
     """Return the accuracy (percentage of words typed correctly) of TYPED
     compared to the corresponding words in SOURCE.
@@ -111,9 +122,24 @@ def accuracy(typed, source):
     source_words = split(source)
     # BEGIN PROBLEM 3
     "*** YOUR CODE HERE ***"
+    # 1. 两个list的长度都是0，则100.0
+    # 2. 两个list的长度只有一个为0，则0.0   (这个check必为0，也是check / tlen)
+    # 3. 两个list的长度都不为0，则 check / tlen
+    tlen, slen = len(typed_words), len(source_words)
+    if tlen == 0 and slen == 0:
+        return 100.0
+    i, check = 0, 0
+    while i < tlen:
+        if slen == i:
+            break
+        if typed_words[i] == source_words[i]:
+            check = check + 1
+        i = i + 1
+    return (check / tlen) * 100.0 if check != 0 else 0.0
     # END PROBLEM 3
 
 
+# 计算words per minute，这个words是根据typed字符串的长度除以5，而不是真正的word个数
 def wpm(typed, elapsed):
     """Return the words-per-minute (WPM) of the TYPED string.
 
@@ -129,6 +155,7 @@ def wpm(typed, elapsed):
     assert elapsed > 0, "Elapsed time must be positive"
     # BEGIN PROBLEM 4
     "*** YOUR CODE HERE ***"
+    return (len(typed) / 5) / (elapsed / 60)
     # END PROBLEM 4
 
 

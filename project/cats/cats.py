@@ -239,6 +239,7 @@ def autocorrect(typed_word, word_list, diff_function, limit):
     # END PROBLEM 5
 
 
+# 这个diff_function，比autocorrect中举例的函数要高级一点，是根据两个字符串对应字符的是否相同来决定的
 def furry_fixes(typed, source, limit):
     """A diff function for autocorrect that determines how many letters
     in TYPED need to be substituted to create SOURCE, then adds the difference in
@@ -262,10 +263,22 @@ def furry_fixes(typed, source, limit):
     5
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    # 使用递归，
+    if limit < 0:
+        return 1
+    t_len, s_len = len(typed), len(source)
+    if t_len == 0 or s_len == 0:
+        return t_len + s_len
+    is_differ_char = 1
+    if typed[0] == source[0]:
+        is_differ_char = 0
+    else:
+        limit = limit - 1
+    return is_differ_char + furry_fixes(typed[1:], source[1:], limit)
     # END PROBLEM 6
 
 
+# 这又是一个differ_function，
 def minimum_mewtations(typed, source, limit):
     """A diff function for autocorrect that computes the edit distance from TYPED to SOURCE.
     This function takes in a string TYPED, a string SOURCE, and a number LIMIT.
@@ -283,16 +296,16 @@ def minimum_mewtations(typed, source, limit):
     >>> minimum_mewtations("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
     """
-    assert False, 'Remove this line'
-    if ___________: # Base cases should go here, you may add more base cases as needed.
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-    # Recursive cases should go below here
-    if ___________: # Feel free to remove or add additional cases
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
+    # Base cases should go here, you may add more base cases as needed.
+    if limit < 0:
+        return 1
+    if typed == source:
+        return 0
+    
+    # Recursive cases should go below here, feel free to remove or add additional cases
+    if ___________: 
+        
+
     else:
         add = ... # Fill in these lines
         remove = ...

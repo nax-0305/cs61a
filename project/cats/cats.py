@@ -196,6 +196,9 @@ def memo_diff(diff_function):
 ###########
 
 
+# 从已有的word_list中找出最接近typed_word的word代替
+# 如何找到？
+# 使用diff_function，由这个函数决定
 def autocorrect(typed_word, word_list, diff_function, limit):
     """Returns the element of WORD_LIST that has the smallest difference
     from TYPED_WORD based on DIFF_FUNCTION. If multiple words are tied for the smallest difference,
@@ -217,6 +220,22 @@ def autocorrect(typed_word, word_list, diff_function, limit):
     """
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+    # 1. 如果typed_word在word_list中，那么返回typed_word
+    # 2. 如果不在，则根据diff_function，将typed_word与word_list中的word一一比较不同，返回difference最小的word
+    # 3. 如果任何一个difference都超过limit，则返回typed_word
+    # 4. 如果有多个最小difference，那么返回word_list中靠前的word
+    diff_word_list, diff_list = [], []
+    for word in word_list:
+        if word == typed_word:
+            return word
+        word_diff = diff_function(typed_word, word, limit)
+        diff_list.append(word_diff)
+        diff_word_list.append((word_diff, word))
+    # print(diff_word_list)
+    min_diff = min(diff_list, key=abs)
+    last_word = [diff_word[1] for diff_word in diff_word_list if diff_word[0] <= limit and diff_word[0] == min_diff]
+    # print(last_word)
+    return typed_word if len(last_word) == 0 else last_word[0]
     # END PROBLEM 5
 
 

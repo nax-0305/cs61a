@@ -301,18 +301,34 @@ def minimum_mewtations(typed, source, limit):
         return 1
     if typed == source:
         return 0
+    # 为什么要有这个基础条件，是因为在remove之后，可能会出现空字符串的情况，所以要这么处理
+    t_len, s_len = len(typed), len(source)
+    if t_len == 0 or s_len == 0:
+        return t_len + s_len
     
-    # Recursive cases should go below here, feel free to remove or add additional cases
-    if ___________: 
-        
-
+    # 递归，首字母是否相同
+    if typed[0] == source[0]:
+        return minimum_mewtations(typed[1:], source[1:], limit)
     else:
-        add = ... # Fill in these lines
-        remove = ...
-        substitute = ...
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
+        # 这里如果能用lambda表达式的话，那么将很符合题意
+        # add = lambda list_typed, c: ''.join(list_typed.insert(0, c))
+        # remove = lambda list_typed: ''.join(list_typed.remove(list_typed[0]))
+        # substitute = lambda list_typed, c: add(list(remove(list_typed), c))
+        addcase_list, rmcase_list, substitutecase_list = list(typed), list(typed), list(typed)
+        addcase_list.insert(0, source[0])
+        rmcase_list.remove(rmcase_list[0])
+        substitutecase_list[0] = source[0]
+
+        # solution from cs61a
+        # add = 1 + minimum_mewtations(start, goal[1:], limit-1)
+        # remove = 1 + minimum_mewtations(start[1:], goal, limit-1)
+        # substitute = 1 + minimum_mewtations(start[1:], goal[1:], limit-1)
+        # return min(add, min(remove, substitute))
+
+        # 这块的思路是对的，在当前情况下找到最小的，
+        return 1 + min([minimum_mewtations(''.join(addcase_list), source, limit - 1), 
+                        minimum_mewtations(''.join(rmcase_list), source, limit - 1), 
+                        minimum_mewtations(''.join(substitutecase_list), source, limit - 1)])
 
 
 # Ignore the line below
@@ -357,7 +373,16 @@ def report_progress(typed, source, user_id, upload):
     0.2
     """
     # BEGIN PROBLEM 8
-    "*** YOUR CODE HERE ***"
+    i, progress = 0, 0
+    correct, t_len = 0, len(typed)
+    while i < t_len:
+        if typed[i] != source[i]:
+            break
+        correct, i = correct + 1, i + 1
+    progress = correct / len(source)
+    id_progress = {'id': user_id, 'progress': progress}
+    upload(id_progress)
+    return progress
     # END PROBLEM 8
 
 

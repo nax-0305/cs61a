@@ -179,15 +179,20 @@ def memo(f):
     return memoized
 
 
+# 第7个问题，我的base case可以通过用例，但是没法使用这个装饰器
 def memo_diff(diff_function):
     """A memoization function."""
     cache = {}
 
     def memoized(typed, source, limit):
         # BEGIN PROBLEM EC
-        "*** YOUR CODE HERE ***"
+        if (typed, source) in cache and limit <= cache[(typed, source)][1]:
+            return cache[(typed, source)][0]
+        else:
+            value = diff_function(typed, source, limit)
+            cache[(typed, source)] = [value, limit]
+            return value
         # END PROBLEM EC
-
     return memoized
 
 
@@ -199,6 +204,7 @@ def memo_diff(diff_function):
 # 从已有的word_list中找出最接近typed_word的word代替
 # 如何找到？
 # 使用diff_function，由这个函数决定
+@memo
 def autocorrect(typed_word, word_list, diff_function, limit):
     """Returns the element of WORD_LIST that has the smallest difference
     from TYPED_WORD based on DIFF_FUNCTION. If multiple words are tied for the smallest difference,
@@ -279,6 +285,7 @@ def furry_fixes(typed, source, limit):
 
 
 # 这又是一个differ_function，
+@memo_diff
 def minimum_mewtations(typed, source, limit):
     """A diff function for autocorrect that computes the edit distance from TYPED to SOURCE.
     This function takes in a string TYPED, a string SOURCE, and a number LIMIT.
@@ -305,7 +312,6 @@ def minimum_mewtations(typed, source, limit):
     t_len, s_len = len(typed), len(source)
     if t_len == 0 or s_len == 0:
         return t_len + s_len
-    
     # 递归，首字母是否相同
     if typed[0] == source[0]:
         return minimum_mewtations(typed[1:], source[1:], limit)
@@ -318,18 +324,26 @@ def minimum_mewtations(typed, source, limit):
         addcase_list.insert(0, source[0])
         rmcase_list.remove(rmcase_list[0])
         substitutecase_list[0] = source[0]
-
-        # solution from cs61a
-        # add = 1 + minimum_mewtations(start, goal[1:], limit-1)
-        # remove = 1 + minimum_mewtations(start[1:], goal, limit-1)
-        # substitute = 1 + minimum_mewtations(start[1:], goal[1:], limit-1)
-        # return min(add, min(remove, substitute))
-
-        # 这块的思路是对的，在当前情况下找到最小的，
+        # 这块的思路是对的，在当前情况下找到最小的
         return 1 + min([minimum_mewtations(''.join(addcase_list), source, limit - 1), 
                         minimum_mewtations(''.join(rmcase_list), source, limit - 1), 
                         minimum_mewtations(''.join(substitutecase_list), source, limit - 1)])
 
+    # solution from cs61a 
+    # if typed == "" or source == "":
+    #     return max(len(typed), len(source))
+    # elif limit == 0:
+    #     return int(typed!=source)
+    # elif typed == source:
+    #     return 0
+    # elif typed[0] == source[0]:
+    #     return minimum_mewtations(typed[1:], source[1:], limit)
+    # else:
+    #     # 这里是用的逆向思维，增加、删除、替换的操作
+    #     add = 1 + minimum_mewtations(typed, source[1:], limit-1)
+    #     remove = 1 + minimum_mewtations(typed[1:], source, limit-1)
+    #     substitute = 1 + minimum_mewtations(typed[1:], source[1:], limit-1)
+    # return min(add, min(remove, substitute))
 
 # Ignore the line below
 minimum_mewtations = count(minimum_mewtations)
@@ -405,7 +419,15 @@ def time_per_word(words, timestamps_per_player):
     [[6, 3, 6, 2], [10, 6, 1, 2]]
     """
     # BEGIN PROBLEM 9
-    "*** YOUR CODE HERE ***"
+    times = []
+    for t_list in timestamps_per_player:
+        i, t_list_len = 0, len(t_list)
+        tmp_list = []
+        while i < t_list_len - 1:
+            tmp_list.append(t_list[i+1] - t_list[i])
+            i = i + 1
+        times.append(tmp_list)
+    return words, times
     # END PROBLEM 9
 
 
@@ -425,9 +447,10 @@ def time_per_word_match(words, timestamps_per_player):
     >>> get_all_times(match_object)
     [[6, 3, 6, 2], [10, 6, 1, 2]]
     """
-    # BEGIN PROBLEM 10
-    "*** YOUR CODE HERE ***"
-    # END PROBLEM 10
+    # BEGIN PROBLEM 11
+    words, times = time_per_word(words, timestamps_per_player)
+    return match(words, times)
+    # END PROBLEM 11
 
 
 def fastest_words(match_object):
@@ -448,7 +471,17 @@ def fastest_words(match_object):
     player_indices = range(len(get_all_times(match_object)))  # contains an *index* for each player
     word_indices = range(len(get_all_words(match_object)))  # contains an *index* for each word
     # BEGIN PROBLEM 11
-    "*** YOUR CODE HERE ***"
+    i, j =0, 0
+    fast_list = [[] for i in player_indices]
+    for i in word_indices:
+        min_pnumber, min_time = 0, get_time(match_object, 0, i)
+        for j in player_indices:
+            j_time = get_time(match_object, j, i)
+            if j_time < min_time:
+                min_pnumber, min_time = j, j_time
+
+        fast_list[min_pnumber].append(get_word(match_object, i))
+    return fast_list
     # END PROBLEM 11
 
 
